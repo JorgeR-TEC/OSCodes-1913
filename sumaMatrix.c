@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <stdlib.h>
+
+#define M 2
+#define N 3
+
+int A[M][N]={{1,2,3}, {4,5,6}};
+int B[M][N]={{7,8,9}, {10, 11, 12}};
+int C[M][N];
+
+struct p{
+	int i;
+	int j;
+};
+
+void *suma(void *arg){
+	struct p *param=(struct p *)arg;
+	int fila=param->i;
+	int columna=param->j;
+	C[fila][columna]=A[fila][columna]+B[fila][columna];
+	
+	
+}
+
+void printMatrix(){
+	for(int filas=0; filas<M; filas++){
+		for(int columnas=0; columnas<N; columnas++){
+			printf("%d,", C[filas][columnas]);
+		}
+		printf("\n");
+	}
+}
+
+int main(){
+	pthread_t workers[M][N];
+	pthread_t tId;
+	for(int filas=0; filas<M; filas++){
+		for(int columnas=0; columnas<N; columnas++){
+			struct p *temp=malloc(sizeof(struct p));
+			temp->i=filas;
+			temp->j=columnas;
+			pthread_create(&workers[filas][columnas], NULL, suma, (void *)temp);
+		}
+	}
+	for(int filas=0; filas<M; filas++){
+		for(int columnas=0; columnas<N; columnas++){
+			pthread_join(workers[filas][columnas], NULL);
+		}
+	}
+	printMatrix();
+	return 0;
+}
