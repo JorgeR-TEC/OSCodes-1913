@@ -18,6 +18,8 @@ void *suma(void *arg){
 	struct p *param=(struct p *)arg;
 	int fila=param->i;
 	int columna=param->j;
+	
+	
 	C[fila][columna]=A[fila][columna]+B[fila][columna];
 	
 	
@@ -34,7 +36,6 @@ void printMatrix(){
 
 int main(){
 	pthread_t workers[M][N];
-	pthread_t tId;
 	for(int filas=0; filas<M; filas++){
 		for(int columnas=0; columnas<N; columnas++){
 			struct p *temp=malloc(sizeof(struct p));
